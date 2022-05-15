@@ -43,8 +43,7 @@ const typeDefs = gql`
     enum Role {
         Student
         TA
-        Prof
-        AProf
+        Lecturer
     }
 
     type Module {
