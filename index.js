@@ -1,7 +1,9 @@
 // Imports
 
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, AuthenticationError } = require('apollo-server')
 const fs = require('fs')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 // Helper Functions
 
@@ -21,7 +23,6 @@ const typeDefs = gql`
         modules: [ModuleTaken!]!
         email: String!
         password: String!
-        
     }
 
     type Student implements User {
@@ -96,7 +97,18 @@ const typeDefs = gql`
         student(id: ID!): Student # resolver field
         modules(year: Int, sem: Int): [Module] # resolver field
         module(id: ID!): Module # resolver field
+        currentUser: Student # resover field
     }
+
+    type SignInResponse {
+        token: String
+        error: String
+    }
+
+    type Mutation {
+        login(email: String!, password: String!): SignInResponse
+    }
+
 `
 
 const resolvers = {
@@ -109,7 +121,11 @@ const resolvers = {
             return modules.filter((module) => yearFilter(module) && semFilter(module))
         },
         student: (parent, args, context) => students.find((student) => student.id === args.id),
-        module: (parent, args, context) => modules.find((module) => module.id === args.id)
+        module: (parent, args, context) => modules.find((module) => module.id === args.id),
+        currentUser: (parent, args, context) => {
+            const student = students.find((student) => student.id === context.id)
+            return student
+        }
     },
     Module : {
         code: (parent, args, context) => parent.id.split('-')[0],
@@ -132,11 +148,51 @@ const resolvers = {
             const lessonsTakenBy = (student) => student.modules.find((modTaken) => modTaken === parent.moduleId).lessons
             return moduleStudents.filter((student) => lessonsTakenBy(student).includes(parent.code))
         }
+    },
+    Mutation : {
+        login: async (parent, args, context) => {
+            const { email, password } = args
+            const user = students.find((student) => student.email === email)
+            if (!user) return { error : "Email is not in our database." }
+            // const valid = await bcrypt.compare(password, user.password)
+            const valid = password === user.password
+            if (!valid) return { error : "Incorrect password entered." }
+            return {
+                token: jwt.sign({ id: user.id }, "nnamdi")
+            }
+        }
+    },
+    User : {
+        __resolveType : (user) => user.type
     }
 }
 
+const getUser = (token) => {
+    if (token) {
+        try {
+            return jwt.verify(token, "nnamdi")
+        } catch (err) {
+            return { error: true, msg: "Session invalid"}
+        }
+    }
+}
 
-const server = new ApolloServer({typeDefs, resolvers})
+const whitelisted = ['LoginMutation', 'IntrospectionQuery']
+
+const server = new ApolloServer({
+    typeDefs, 
+    resolvers,
+    csrfPrevention: true,
+    context: ({ req }) => {
+        console.log(req.body.operationName)
+        if (whitelisted.includes(req.body.operationName)) return {}
+        const token = req.headers.authorization || ''
+        if (!token.includes('Bearer ')) throw new AuthenticationError("Token must use Bearer format.")
+        const user = getUser(token.split(' ')[1])
+        if (!user) throw new AuthenticationError("You must be logged in!")
+        return user
+    }
+})
 
 server.listen().then(({url}) => {
     console.log(`Server is running at ${url}`)
