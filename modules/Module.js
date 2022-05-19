@@ -1,11 +1,7 @@
 import { createModule, gql } from "graphql-modules";
-import { readFileSync } from "fs";
-
-const readJsonFile = (path) => JSON.parse(readFileSync(path));
-
-const modules = readJsonFile("./test-data/modules.json");
-const lessons = readJsonFile("./test-data/lessons.json");
-const students = readJsonFile("./test-data/students.json");
+import Lesson from "../schema/LessonSchema.js";
+import Student from "../schema/StudentSchema.js";
+import { unpackMultipleDocuments } from "./unpackDocument.js";
 
 export const Module = createModule({
   id: "module",
@@ -37,20 +33,24 @@ export const Module = createModule({
           type === null || type === undefined
             ? true
             : lesson.lessonType === type;
+        const lessons = Lesson.find().then(unpackMultipleDocuments)
         return lessons.filter(
           (lesson) => typeFilter(lesson) && lesson.moduleId === parent.id
         );
       },
       lesson: (parent, args, context) => {
         const { code } = args;
+        const lessons = Lesson.find().then(unpackMultipleDocuments)
         return lessons.filter(
           (lesson) => lesson.moduleId === parent.id && lesson.code === code
         );
       },
-      students: (parent, args, context) =>
-        students.filter((student) =>
+      students: (parent, args, context) => {
+        const students = Student.find().then(unpackMultipleDocuments)
+        return students.filter((student) =>
           student.modules.map((mt) => mt.moduleId).includes(parent.id)
-        ),
+        )
+      },
     },
   },
 });

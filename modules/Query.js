@@ -1,28 +1,24 @@
 import { createModule, gql } from "graphql-modules";
-import { readFileSync } from "fs";
-
-const readJsonFile = (path) => JSON.parse(readFileSync(path));
-
-const modules = readJsonFile("./test-data/modules.json");
-const lessons = readJsonFile("./test-data/lessons.json");
-const students = readJsonFile("./test-data/students.json");
+import Module from "../schema/ModuleSchema.js";
+import Student from "../schema/StudentSchema.js";
+import { unpackMultipleDocuments, unpackSingleDocument } from "./unpackDocument.js";
 
 export const Query = createModule({
   id: "query",
   typeDefs: [
     gql`
       type Query {
-        students: [Student] # resolver field
+        students: [Student]! # resolver field
         student(id: ID!): Student # resolver field
-        modules(year: Int, sem: Int): [Module] # resolver field
+        modules(year: Int, sem: Int): [Module!]! # resolver field
         module(id: ID!): Module # resolver field
-        currentUser: Student # resover field
+        currentUser: User # resolver field
       }
     `,
   ],
   resolvers: {
     Query: {
-      students: () => students,
+      students: () => Student.find({}).then(unpackMultipleDocuments),
       modules: (parent, args, context) => {
         const { year, sem } = args;
         const yearFilter = (module) =>
@@ -33,16 +29,17 @@ export const Query = createModule({
           sem === null || sem === undefined
             ? true
             : parseInt(module.id.split("-")[2]) === sem;
+        const modules = Module.find().then(unpackMultipleDocuments)
         return modules.filter(
           (module) => yearFilter(module) && semFilter(module)
-        );
+        )
       },
       student: (parent, args, context) =>
-        students.find((student) => student.id === args.id),
+        Student.findOne({ id: args.id }).then(unpackSingleDocument),
       module: (parent, args, context) =>
-        modules.find((module) => module.id === args.id),
+        Module.findOne({id: args.id}).then(unpackSingleDocument),
       currentUser: (parent, args, context) => {
-        const student = students.find((student) => student.id === context.id);
+        const student = Student.findOne({id : context.id}).then(unpackSingleDocument);
         return student;
       },
     },

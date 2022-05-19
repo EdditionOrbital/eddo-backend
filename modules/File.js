@@ -5,7 +5,7 @@ export const File = createModule({
 
   typeDefs: gql`
     type File {
-      id: ID!
+      _id: ID!
       title: String!
       path: String!
       size: Float!

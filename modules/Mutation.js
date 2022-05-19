@@ -1,4 +1,7 @@
 import { createModule, gql } from "graphql-modules";
+import jwt from "jsonwebtoken";
+import Student from "../schema/StudentSchema.js";
+import { unpackSingleDocument } from "./unpackDocument.js";
 
 export const Mutation = createModule({
   id: "mutation",
@@ -13,9 +16,8 @@ export const Mutation = createModule({
     Mutation: {
       login: async (parent, args, context) => {
         const { email, password } = args;
-        const user = students.find((student) => student.email === email);
+        const user = await Student.findOne({ email: email }).then(unpackSingleDocument);
         if (!user) return { error: "Email is not in our database." };
-        // const valid = await bcrypt.compare(password, user.password)
         const valid = password === user.password;
         if (!valid) return { error: "Incorrect password entered." };
         return {

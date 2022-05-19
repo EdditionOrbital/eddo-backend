@@ -2,7 +2,6 @@ import { createModule, gql } from "graphql-modules";
 
 export const User = createModule({
   id: "user",
-
   typeDefs: gql`
     interface User {
       id: ID!
@@ -16,7 +15,10 @@ export const User = createModule({
 
   resolvers: {
     User: {
-      __resolveType: (user) => user.type,
-    },
-  },
+      __resolveType: (obj, context, info) => {
+        return obj.mYear === undefined ? 'Professor' : 'Student'
+      }
+    }
+  }
+
 });

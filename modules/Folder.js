@@ -5,7 +5,7 @@ export const Folder = createModule({
 
   typeDefs: gql`
     type Folder {
-      id: ID!
+      _id: ID!
       title: String!
       parentFolder: ID
       openDate: String

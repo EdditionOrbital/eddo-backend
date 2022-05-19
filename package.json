@@ -1,13 +1,14 @@
 {
   "type": "module",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
   "dependencies": {
     "apollo-server": "^3.7.0",
     "bcrypt": "^5.0.1",
-    "graphql": "^16.5.0",
+    "graphql": "^15.8.0",
     "graphql-modules": "^2.0.0",
-    "jsonwebtoken": "^8.5.1"
-  },
-  "scripts": {
-    "start": "nodemon index.js"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.3"
   }
 }

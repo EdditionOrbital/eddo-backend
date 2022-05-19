@@ -7,7 +7,7 @@ export const ModuleTaken = createModule({
       type ModuleTaken {
         moduleId: ID!
         lessons: [ID!]!
-        role: Role
+        role: Role!
       }
     `,
   ],

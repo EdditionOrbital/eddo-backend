@@ -1,11 +1,6 @@
 import { createModule, gql } from "graphql-modules";
-import { readFileSync } from "fs";
-
-const readJsonFile = (path) => JSON.parse(readFileSync(path));
-
-const modules = readJsonFile("./test-data/modules.json");
-const lessons = readJsonFile("./test-data/lessons.json");
-const students = readJsonFile("./test-data/students.json");
+import Student from "../schema/StudentSchema.js";
+import { unpackMultipleDocuments } from "./unpackDocument.js";
 
 export const Lesson = createModule({
   id: "lesson",
@@ -20,12 +15,13 @@ export const Lesson = createModule({
       day: String!
       weeks: [Int!]!
       lessonType: String!
-      students: [Student] # resolver field
+      students: [Student!]! # resolver field
     }
   `,
   resolvers: {
     Lesson: {
       students: (parent, args, context) => {
+        const students = Student.find().then(unpackMultipleDocuments)
         const moduleStudents = students.filter((student) =>
           student.modules.map((mt) => mt.moduleId).includes(parent.moduleId)
         );
