@@ -13,6 +13,7 @@ export const Query = createModule({
         modules(year: Int, sem: Int): [Module!]! # resolver field
         module(id: ID!): Module # resolver field
         currentUser: User # resolver field
+        currentUserModules: [Module!]!
       }
     `,
   ],
@@ -33,6 +34,13 @@ export const Query = createModule({
         return modules.filter(
           (module) => yearFilter(module) && semFilter(module)
         )
+      },
+      currentUserModules: async (parent, args, context) => {
+        const student = await Student.findOne({id : context.id}).then(unpackSingleDocument);
+        const lst = student.modules.map(x => x.moduleId)
+        const modules = await Module.find().then(unpackMultipleDocuments)
+        if (!lst.length) return modules
+        return modules.filter((module) => lst.includes(module.id))
       },
       student: (parent, args, context) =>
         Student.findOne({ id: args.id }).then(unpackSingleDocument),
