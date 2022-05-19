@@ -18,7 +18,7 @@ const getUser = (token) => {
     }
 }
 
-const whitelisted = ['LoginMutation', 'IntrospectionQuery']
+const whitelisted = ['LoginMutation', 'IntrospectionQuery', 'RegisterMutation']
 
 const server = new ApolloServer({
     schema,
@@ -26,8 +26,8 @@ const server = new ApolloServer({
     context: ({ req }) => {
         console.log(req.body.operationName)
         if (whitelisted.includes(req.body.operationName)) return {}
-        // const token = req.headers.authorization || ''
-        const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkEwMjMzMjEwWCIsImlhdCI6MTY1Mjg3MDg3Nn0.-eezMHGOCtt4F3yvmL5R72nnEBqN3ttESwPGZV0LLwE'
+        const token = req.headers.authorization || ''
+        // const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkEwMjMzMjEwWCIsImlhdCI6MTY1Mjg3MDg3Nn0.-eezMHGOCtt4F3yvmL5R72nnEBqN3ttESwPGZV0LLwE'
         if (!token.includes('Bearer ')) throw new AuthenticationError("Token must use Bearer format.")
         const user = getUser(token.split(' ')[1])
         if (!user) throw new AuthenticationError("You must be logged in!")
