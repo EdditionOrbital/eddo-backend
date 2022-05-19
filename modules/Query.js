@@ -47,7 +47,7 @@ export const Query = createModule({
       module: (parent, args, context) =>
         Module.findOne({id: args.id}).then(unpackSingleDocument),
       currentUser: (parent, args, context) => {
-        const student = Student.findOne({id : context.id}).then(unpackSingleDocument);
+        const student = Student.findOne({id : context.id}).then(unpackSingleDocument).catch(err => null);
         return student;
       },
     },
