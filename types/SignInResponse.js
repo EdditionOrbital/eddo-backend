@@ -1,5 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import { getStudent } from "./Student.js";
+import jwt from 'jsonwebtoken'
 
 export const SignInResponseModule = createModule({
   id: "sign-in-response",
