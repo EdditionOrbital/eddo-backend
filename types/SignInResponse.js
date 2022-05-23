@@ -28,7 +28,7 @@ export const SignInResponseModule = createModule({
       },
       register: async (parent, args, context) => {
         var {id, firstName, lastName, email, password, mYear} = args
-        if (!/A\d\d\d\d\d\d\dA/.test(id)) return { error: "Matriculation number is invalid."}
+        if (!/^A\d{7}[A-Z]$/.test(id)) return { error: "Matriculation number is invalid."}
         if (!/.+@u.nus.edu/.test(email)) return { error: "Email is invalid."}
         firstName = firstName.trim()
         if (!/[A-Za-z ]+/.test(firstName)) return { error: "Invalid first name entered."}
