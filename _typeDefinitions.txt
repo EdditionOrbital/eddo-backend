@@ -1,0 +1,135 @@
+interface User {
+	id          : String
+	firstName   : String
+	lastName    : String
+	modules     : [ModuleTaken]
+	email       : String
+	password    : String
+}
+
+type Student implements User {
+	mYear       : String
+}
+
+type Professor implements User {
+	title       : ProfessorTitle
+}
+ss
+enum ProfessorTitle {
+	AProf
+	Prof
+	Dr
+	Mr
+	Ms
+}
+
+ModuleTaken {
+	moduleId : String
+	lessons  : [String]
+	type     : Role
+}
+
+enum Role {
+	Student
+	TA
+	Prof
+	AProf
+}
+
+interface Submission {
+	studentId   : String
+	moduleId    : String
+	time        : String
+}
+
+type QuizSubmission implements Submission {
+	answers     : [StudentQuizAnswer]
+}
+
+type FileSubmission implements Submission {
+	file        : File
+}
+
+interface StudentQuizAnswer {
+	questionCode : Int
+}
+
+type Quiz {
+	id          : String
+	moduleId    : String
+	questions   : [QuizQuestion]
+	openDate    : String
+	closeDate   : String
+	score       : Float
+}
+
+interface QuizQuestion {
+	questionCode : Int
+	content      : String
+	autoGrade    : Boolean
+}
+
+type MultipleChoiceQuestion implements QuizQuestion {
+	choices  : [String]
+	answer   : Int
+}
+
+type MultipleResponseQuestion implements QuizQuestion {
+	choices  : [String]
+	answers  : [Int]
+}
+
+type ShortResponseQuestion implements QuizQuestion {
+	placeholder : String
+}
+
+type Task {
+	studentId   : String
+	title       : String
+	completed   : Boolean
+	date        : String
+}
+
+type Module {
+	id            : String # MA2001-2021-2
+	title         : String
+	description   : String
+	credits       : Float
+	files         : Folder
+}
+
+class Lesson {
+	code          : String
+	moduleId      : String
+	startTime     : String
+	endTime       : String
+	venue         : String
+	day           : String
+	weeks         : [Int]
+}
+
+type Announcement {
+	title         : String
+	moduleId      : String
+	content       : String
+	author        : String
+	date          : String
+	readBy        : [String]
+}
+
+type Folder {
+	id           : String
+	title        : String
+	parentFolder : String
+	openDate     : String
+	closeDate    : String
+}
+
+type File {
+	title       : String
+	path        : String
+	parentFolder: String
+	size        : Float
+	openDate    : String
+	closeDate   : String
+}
