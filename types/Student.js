@@ -21,7 +21,9 @@ export const getMultipleStudents = (params) => Student.find(params).then(unpackM
 export const getStudent = (params) => Student.findOne(params).then(unpackSingleDocument).catch(err => console.log('Error while getting student'))
 
 export const StudentModule = createModule({
+  
   id: "student",
+
   typeDefs: gql`
     type Student implements User {
       id: ID!
@@ -38,6 +40,7 @@ export const StudentModule = createModule({
       student(id: ID!): Student # resolver field
     }
   `,
+
   resolvers: {
     Query: {
       students: getAllStudents,

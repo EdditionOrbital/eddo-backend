@@ -16,13 +16,11 @@ export const UserModule = createModule({
     type Query {
       currentUser: User
     }
-
   `,
 
   resolvers: {
     User: {
       __resolveType: (obj, context, info) => {
-        console.log(obj)
         return obj.mYear === undefined || obj.mYear === null ? 'Professor' : 'Student'
       }
     },
