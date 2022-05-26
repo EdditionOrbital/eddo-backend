@@ -16,6 +16,7 @@ export const SignInResponseModule = createModule({
       register(id: ID!, firstName: String!, lastName: String, email: String!, password: String!, mYear: Int!): SignInResponse
     }
   `,
+  
   resolvers: {
     Mutation: {
       login: async (parent, args, context) => {
