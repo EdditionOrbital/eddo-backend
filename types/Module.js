@@ -93,7 +93,7 @@ export const ModuleModule = createModule({
         const student = await getStudent({id:context.id})
         const lst = student.modules.map(x => x.moduleId)
         const modules = await getAllModules()
-        if (!lst.length) return modules
+        if (!lst.length) return []
         return modules.filter((module) => lst.includes(module.id))
       }
     }
