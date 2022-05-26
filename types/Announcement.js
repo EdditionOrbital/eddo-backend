@@ -14,7 +14,7 @@ export const AnnouncementSchema = mongoose.Schema({
     readBy: { type: [schemaTypes.String], required: true },
 })
 
-export const Announcement = mongoose.model('Announcement', StudentSchema)
+export const Announcement = mongoose.model('Announcement', AnnouncementSchema)
 
 export const getAllAnnouncements = () => Announcement.find({}).then(unpackMultipleDocuments).catch(err => console.log('Error while getting all announcements'))
 export const getModuleAnnouncements = (modId) => Announcement.find({moduleId: modId}).then(unpackMultipleDocuments).catch(err => console.log('Error while getting module announcements'))
