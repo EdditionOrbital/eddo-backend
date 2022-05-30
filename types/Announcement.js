@@ -41,7 +41,7 @@ export const AnnouncementModule = createModule({
             const student = await getStudent({id:context.id})
             const lst = student.modules.map(x => x.moduleId).filter(x => isCurrentSemMod(x))
             const allAnnouncements = await getAllAnnouncements()
-            return allAnnouncements.filter(a => lst.includes(a.moduleId))
+            return allAnnouncements.filter(a => (lst.includes(a.moduleId) && a.readBy.includes(student.firstName)))
           }
       }
   }

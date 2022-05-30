@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGO_URL = 'mongodb://localhost:27017'
+const MONGO_URL = 'mongodb://0.0.0.0:27017'
 const DB_NAME = 'eddo'
 
 const connectToMongo = (after) => mongoose.connect(
