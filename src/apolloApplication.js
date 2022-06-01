@@ -11,6 +11,7 @@ import { StudentModule } from "../types/Student.js";
 import { TaskModule } from "../types/Task.js";
 import { UserModule } from "../types/User.js";
 import { AnnouncementModule } from "../types/Announcement.js";
+import { StaffModule } from "../types/Staff.js";
 
 export const apolloApplication = createApplication({
   modules: [
@@ -25,6 +26,7 @@ export const apolloApplication = createApplication({
     StudentModule, 
     UserModule,
     TaskModule,
-    AnnouncementModule
+    AnnouncementModule,
+    StaffModule
   ],
 });

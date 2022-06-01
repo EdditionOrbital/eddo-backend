@@ -1,4 +1,5 @@
 import { createModule, gql } from "graphql-modules";
+import { getStaff } from "./Staff.js";
 import { getStudent } from "./Student.js";
 
 export const UserModule = createModule({
@@ -21,11 +22,17 @@ export const UserModule = createModule({
   resolvers: {
     User: {
       __resolveType: (obj, context, info) => {
-        return obj.mYear === undefined || obj.mYear === null ? 'Professor' : 'Student'
+        return obj.mYear === undefined || obj.mYear === null ? 'Staff' : 'Student'
       }
     },
     Query: {
-      currentUser: (parent, args, context) => getStudent({id:context.id})
+      currentUser: async (parent, args, context) => {
+        var user = await getStudent({id:context.id})
+        if (!user) {
+          user = await getStaff({id:context.id})
+        }
+        return user
+      }
     }
   }
 
