@@ -39,7 +39,7 @@ export const AnnouncementModule = createModule({
       Query: {
           currentUserAnnouncements: async (parent, args, context) => {
             const student = await getStudent({id:context.id})
-            const lst = student.modules.map(x => x.moduleId).filter(x => isCurrentSemMod(x))
+            const lst = student.modules.map(x => x.moduleId)
             const allAnnouncements = await getAllAnnouncements()
             return allAnnouncements.filter(a => (lst.includes(a.moduleId) && a.readBy.includes(student.firstName)))
           }

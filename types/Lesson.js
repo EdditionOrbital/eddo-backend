@@ -1,8 +1,9 @@
 import { createModule, gql } from "graphql-modules";
-import { Student } from "./Student.js";
+import { getStudent, Student } from "./Student.js";
 import { unpackMultipleDocuments } from "../utils/unpackDocument.js";
 
 import mongoose from "mongoose"
+import { isCurrentSemMod } from "../utils/currentYearSemester.js";
 const schemaTypes = mongoose.Schema.Types
 
 const LessonSchema = mongoose.Schema({
@@ -17,6 +18,7 @@ const LessonSchema = mongoose.Schema({
 })
 
 export const Lesson = mongoose.model('Lesson', LessonSchema)
+export const getAllLessons = () => Lesson.find({}).then(unpackMultipleDocuments).catch(err => console.log('Error while getting all lessons'))
 
 export const LessonModule = createModule({
   id: "lesson",
@@ -32,6 +34,10 @@ export const LessonModule = createModule({
       weeks: [Int!]!
       lessonType: String!
       students: [Student!]! # resolver field
+    }
+
+    type Query {
+      currentUserLessons: [Lesson!]!
     }
   `,
   resolvers: {
@@ -49,5 +55,13 @@ export const LessonModule = createModule({
         );
       },
     },
+    Query: {
+      currentUserLessons: async (parent, args, context) => {
+        const student = await getStudent({id:context.id})
+        const lst = student.modules.map(x => x.moduleId)
+        const allLessons = await getAllLessons()
+        if (!lst.length) return []
+        return allLessons.filter(l => lst.includes(l.moduleId))
+    }
   },
-});
+}})
