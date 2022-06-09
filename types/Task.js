@@ -1,26 +1,8 @@
 import { createModule, gql } from "graphql-modules";
-import mongoose from "mongoose";
-import { unpackMultipleDocuments, unpackSingleDocument } from "../utils/unpackDocument.js";
-import { ModuleTakenSchema } from "./ModuleTaken.js";
-import { getStudent } from "./Student.js";
-const schemaTypes = mongoose.Schema.Types
-
-export const TaskSchema = mongoose.Schema({
-    studentId: { type: schemaTypes.String, required: true },
-    title: { type: schemaTypes.String, required: true },
-    status: { type: schemaTypes.String, required: true },
-    date: { type: schemaTypes.String, required: false },
-})
-
-export const Task = mongoose.model('Task', TaskSchema)
-
-export const getAllTasks = () => Task.find({}).then(unpackMultipleDocuments).catch(err => console.log('Error while getting all tasks'))
-export const getUserTasks = (id) => Task.find({studentId: id}).then(unpackMultipleDocuments).catch(err => console.log('Error while getting student tasks' + err))
+import { createTask, deleteTask, readTasks, updateTask } from "../db_functions/Task.js";
 
 export const TaskModule = createModule({
-
   id: "task",
-
   typeDefs: gql`
     type Task {
         _id: ID!
@@ -35,46 +17,19 @@ export const TaskModule = createModule({
     }
 
     type Mutation {
-        newTask(title: String, status: String): MutationResponse
-        updateTask(_id: ID!, title: String, status: String): MutationResponse
-        deleteTask(_id: ID!): MutationResponse
+        newTask(title: String, status: String): HTTPResponse
+        updateTask(_id: ID!, title: String, status: String): HTTPResponse
+        deleteTask(_id: ID!): HTTPResponse
     }
-
   `,
-  
   resolvers: {
       Query: {
-          currentUserTasks: async (parent, args, context) => {
-            const tasks = await getUserTasks(context.id)
-            if (tasks === undefined || tasks === null) return []
-            return tasks
-          }
+          currentUserTasks: (_, __, context) => readTasks({studentId: context.id})
       },
       Mutation: {
-          newTask: (parent, args, context) => {
-            const studentId = context.id
-            const { title, status } = args
-            const date = null
-            const resp = new Task({
-              studentId,
-              title,
-              status,
-              date
-            }).save().then(result => ({ completed: result._id}))
-            .catch(err => ({ error: err}))
-            return resp
-          },
-          updateTask: async (parent, args, context) => {
-            const { _id, title, status } = args
-            const doc = await Task.findOne({_id: _id })
-            doc.title = title
-            doc.status = status
-            return doc.save().then(result => ({ completed: result._id })).catch(err => ({ error: err })) 
-          },
-          deleteTask: (parent, args, context) => {
-            return Task.deleteOne({_id: args._id}).then(() => ({completed: 'Deleted'})).catch(err => ({error:err}))
-          }
+          newTask: (_, args, context) => createTask({...args, studentId: context.id}),
+          updateTask: async (_, args) => updateTask({_id: args._id}, args),
+          deleteTask: (_, args) => deleteTask(args)
       }
   }
-
 })

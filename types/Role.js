@@ -1,9 +1,7 @@
 import { createModule, gql } from "graphql-modules";
 
 export const RoleModule = createModule({
-
   id: "role",
-
   typeDefs: [
     gql`
       enum Role {
@@ -14,5 +12,4 @@ export const RoleModule = createModule({
       }
     `,
   ],
-  
 });
