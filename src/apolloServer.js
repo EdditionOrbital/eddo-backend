@@ -2,7 +2,7 @@ import { apolloApplication } from './apolloApplication.js';
 import { ApolloServer, AuthenticationError } from 'apollo-server'
 import jwt from 'jsonwebtoken';
 
-const whitelisted = ['LoginMutation', 'IntrospectionQuery', 'RegisterMutation']
+const whitelisted = ['LoginMutation', 'RegisterMutation']
 const schema = apolloApplication.createSchemaForApollo();
 
 const getUser = (token) => {
@@ -18,7 +18,8 @@ const getUser = (token) => {
 const apolloServer = new ApolloServer({
     schema,
     csrfPrevention: true,
-    context: ({ req }) => {
+    context: async ({ req }) => {
+        if (req.body.operationName === 'IntrospectionQuery') return {}
         console.log(req.body.operationName)
         if (whitelisted.includes(req.body.operationName)) return {}
         const token = req.headers.authorization || ''
