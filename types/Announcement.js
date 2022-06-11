@@ -5,28 +5,28 @@ import { readStudent } from "../db_functions/Student.js";
 export const AnnouncementModule = createModule({
   id: "announcement",
   typeDefs: gql`
-    type Announcement {
-        title: String!
-        moduleId: String!
-        content: String
-        authorId: String!
-        date: String!
-        readBy: [String!]!
-    }
+	type Announcement {
+		title: String!
+		moduleId: String!
+		authorId: String!
+		content: String
+		date: String!
+		readBy: [String!]!
+	}
 
-    type Query {
-        currentUserAnnouncements: [Announcement!]!
-    }
+	type Query {
+		contextAnnouncements: [Announcement!]!
+	}
   `,
   resolvers: {
-      Query: {
-          currentUserAnnouncements: async (_, __, context) => {
-            const student = await readStudent({id:context.id})
-            const lst = student.modules.map(x => x.moduleId)
-            const allAnnouncements = await readAnnouncements()
-            if (!lst.length) return []
-            return allAnnouncements.filter(a => (lst.includes(a.moduleId) && a.readBy.includes(student.firstName)))
-          }
-      }
+	  Query: {
+		  contextAnnouncements: async (_, __, context) => {
+			const student = await readStudent({id:context.id})
+			const moduleIds = student.modules.map(x => x.moduleId)
+			const announcements = await readAnnouncements()
+			if (!moduleIds.length) return []
+			return announcements.filter(a => (moduleIds.includes(a.moduleId) && a.readBy.includes(student.firstName)))
+		  }
+	  }
   }
 })

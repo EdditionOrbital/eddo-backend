@@ -13,21 +13,21 @@ export const AdminModule = createModule({
     }
 
     type Query {
-      allAdmins: [Admin]!
-      admin(id: ID!): Admin
+      readAdmins: [Admin]!
+      readAdmin(id: ID!): Admin
     }
 
     type Mutation {
-      newAdmin(email: String!, password: String!): HTTPResponse
+      createAdmin(email: String!, password: String!): HTTPResponse
     }
   `,
   resolvers: {
     Query: {
-      allAdmins: () => readAdmins(),
-      admin: (_, args) => readAdmin(args)
+      readAdmins: () => readAdmins(),
+      readAdmin: (_, args) => readAdmin(args)
     },
     Mutation: {
-      newAdmin: (_, args) => createAdmin(args)
+      createAdmin: (_, args) => createAdmin(args)
     }
   }
 })
