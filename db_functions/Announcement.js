@@ -3,12 +3,12 @@ import { unpackMultipleDocuments } from "../utils/unpackDocument.js";
 const schemaTypes = mongoose.Schema.Types
 
 export const AnnouncementSchema = mongoose.Schema({
-    title: { type: schemaTypes.String, required: true },
-    moduleId: { type: schemaTypes.String, required: true },
+    title: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
+    moduleId: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
     content: { type: schemaTypes.String, required: false },
-    authorId: { type: schemaTypes.String, required: true },
-    date: { type: schemaTypes.String, required: true },
-    readBy: { type: [schemaTypes.String], required: true },
+    authorId: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
+    date: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
+    readBy: { type: [schemaTypes.String], required: [true, "This field cannot be empty."] },
 })
 
 export const AnnouncementObject = mongoose.model('Announcement', AnnouncementSchema)

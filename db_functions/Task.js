@@ -3,9 +3,9 @@ import { unpackMultipleDocuments, unpackSingleDocument } from "../utils/unpackDo
 const schemaTypes = mongoose.Schema.Types
 
 export const TaskSchema = mongoose.Schema({
-    studentId: { type: schemaTypes.String, required: true },
-    title: { type: schemaTypes.String, required: true },
-    status: { type: schemaTypes.String, required: true },
+    studentId: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
+    title: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
+    status: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
     date: { type: schemaTypes.String, required: false },
 })
 
