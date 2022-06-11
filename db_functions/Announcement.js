@@ -13,8 +13,27 @@ export const AnnouncementSchema = mongoose.Schema({
 
 export const AnnouncementObject = mongoose.model('Announcement', AnnouncementSchema)
 
+export const createAnnouncement = (announcement) => {
+    const httpResponse = new AnnouncementObject({...announcement}).save()
+        .then(res => ({completed: res.title}))
+        .catch(err => ({error: err}))
+    return httpResponse
+}
+
 export const readAnnouncements = (params) => {
 	return AnnouncementObject.find(params)
 		.then(unpackMultipleDocuments)
 		.catch(err => console.log('Error while getting announcements'))
+}
+
+export const updateAnnouncement = (query, update) => {
+    return AnnouncementObject.findOneAndUpdate(query, update, {upsert: true, new: true})
+        .then(res => {response: res.title})
+        .catch(err => {error: err})
+}
+
+export const deleteAnnouncement = (params) => {
+    return AnnouncementObject.findOneAndDelete(params)
+        .then(res => ({response: "Deleted"}))
+        .catch(err => {error: err})
 }
