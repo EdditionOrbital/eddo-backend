@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken"
 import mongoose from "mongoose"
 import { unpackMultipleDocuments, unpackSingleDocument } from "../utils/unpackDocument.js"
 import { ModuleTakenSchema } from "./ModuleTaken.js"
-import uniqueValidator from 'mongoose-unique-validator'
 
 const schemaTypes = mongoose.Schema.Types
 
@@ -15,8 +14,6 @@ export const StudentSchema = mongoose.Schema({
     password: { type: schemaTypes.String, required: true },
     mYear: { type: schemaTypes.Number, required: true },
 })
-
-StudentSchema.plugin(uniqueValidator)
 
 export const StudentObject = mongoose.model('Student', StudentSchema)
 

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { unpackMultipleDocuments, unpackSingleDocument } from "../utils/unpackDocument.js";
 import { ModuleTakenSchema } from "./ModuleTaken.js";
-import uniqueValidator from 'mongoose-unique-validator'
 import jwt from 'jsonwebtoken'
 const schemaTypes = mongoose.Schema.Types
 
@@ -14,8 +13,6 @@ export const StaffSchema = mongoose.Schema({
     password: { type: schemaTypes.String, required: true },
     title: { type: schemaTypes.String, required: true },
 })
-
-StaffSchema.plugin(uniqueValidator)
 
 export const StaffObject = mongoose.model('Staff', StaffSchema)
 
