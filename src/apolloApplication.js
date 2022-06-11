@@ -14,19 +14,19 @@ import { AdminModule } from "../types/Admin.js";
 import { HTTPResponseModule } from "../types/HTTPResponse.js";
 
 export const apolloApplication = createApplication({
-  modules: [
-    FileModule, 
-    FolderModule, 
-    LessonModule, 
-    ModuleModule, 
-    ModuleTakenModule, 
-    RoleModule, 
-    StudentModule, 
-    UserModule,
-    TaskModule,
-    AnnouncementModule,
-    StaffModule,
-    AdminModule,
-    HTTPResponseModule
-  ]
+	modules: [
+		FileModule, 
+		FolderModule, 
+		LessonModule, 
+		ModuleModule, 
+		ModuleTakenModule, 
+		RoleModule, 
+		StudentModule, 
+		UserModule,
+		TaskModule,
+		AnnouncementModule,
+		StaffModule,
+		AdminModule,
+		HTTPResponseModule
+	]
 });
