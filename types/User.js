@@ -15,13 +15,13 @@ export const UserModule = createModule({
 			password: String!
 		}
 
-		type CurrentUserResponse {
-			user: User
+		type EddoAppContext {
+			currentUser: User
 			dbInitialised: Boolean
 		}
 
 		type Query {
-			currentUser: CurrentUserResponse
+			eddoAppContext: EddoAppContext
 		}
 
 		type Mutation {
@@ -33,13 +33,13 @@ export const UserModule = createModule({
 			__resolveType: (obj) => obj.mYear || obj.title ? obj.mYear ? 'Student' : 'Staff' : 'Admin'
 		},
 		Query: {
-			currentUser: async (_, __, context) => {
-				const admins = await readAdmins()
-				if (!admins.length) return { dbInitialised: false }
+			eddoAppContext: async (_, __, context) => {
+				// const admins = await readAdmins()
+				// if (!admins.length) return { dbInitialised: false }
 				var user = await readStudent({id: context.id})
 				if (!user) { user = await readStaff({id:context.id})}
 				if (!user) { user = await readAdmin({id:context.id})}
-				return { user: user, dbInitialised: true }
+				return { currentUser: user, dbInitialised: true }
 			}
 		},
 		Mutation: {
