@@ -12,6 +12,7 @@ export const AnnouncementModule = createModule({
 		content: String
 		date: String!
 		readBy: [String!]!
+		author: String
 	}
 
 	type Query {
