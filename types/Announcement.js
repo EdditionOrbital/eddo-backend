@@ -27,7 +27,7 @@ export const AnnouncementModule = createModule({
   `,
   resolvers: {
 	Announcement: {
-		author: (p) => readStaff({id: p.authorId})
+		author: (p) => readStaff({id: p.authorId}).then(s => `${s.title}. ${s.firstName} ${s.lastName}`)
 	},
 	Query: {
 		contextAnnouncements: async (_, __, context) => {
