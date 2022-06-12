@@ -1,4 +1,3 @@
-import { argumentsObjectFromField } from "@apollo/client/utilities";
 import { createModule, gql } from "graphql-modules";
 import { createAnnouncement, deleteAnnouncement, readAnnouncements } from "../db_functions/Announcement.js";
 import { readStudent } from "../db_functions/Student.js";
@@ -27,19 +26,22 @@ export const AnnouncementModule = createModule({
 	}
   `,
   resolvers: {
-	  Query: {
-		  contextAnnouncements: async (_, __, context) => {
-			const student = await readStudent({id:context.id})
-			const moduleIds = student.modules.map(x => x.moduleId)
-			const announcements = await readAnnouncements()
-			if (!moduleIds.length) return []
-			return announcements.filter(a => (moduleIds.includes(a.moduleId) && a.readBy.includes(student.firstName)))
-		  }
-	  },
-	  Mutation: {
+	Announcement: {
+		author: (p) => readStaff({id: p.authorId})
+	},
+	Query: {
+		contextAnnouncements: async (_, __, context) => {
+		const student = await readStudent({id:context.id})
+		const moduleIds = student.modules.map(x => x.moduleId)
+		const announcements = await readAnnouncements()
+		if (!moduleIds.length) return []
+		return announcements.filter(a => (moduleIds.includes(a.moduleId) && a.readBy.includes(student.firstName)))
+		}
+	},
+	Mutation: {
 		createAnnouncement: (_, args, context) => createAnnouncement({...args, authorId: context.id}),
 		updateAnnouncement: async (_, args) => updateTask({title: args.title}, args),
 		deleteAnnouncement: (_, args) => deleteAnnouncement(args)
-	  }
+	}
   }
 })
