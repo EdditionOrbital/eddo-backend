@@ -1,6 +1,10 @@
 import { apolloApplication } from './apolloApplication.js';
-import { ApolloServer, AuthenticationError } from 'apollo-server'
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import http from 'http';
+import express from 'express';
 import jwt from 'jsonwebtoken';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+
 
 const whitelisted = ['LoginMutation', 'RegisterMutation']
 const schema = apolloApplication.createSchemaForApollo();
@@ -15,10 +19,7 @@ const getUser = (token) => {
     }
 }
 
-const apolloServer = new ApolloServer({
-    schema,
-    csrfPrevention: true,
-    context: async ({ req }) => {
+const apolloContext = async ({ req }) => {
         if (req.body.operationName === 'IntrospectionQuery') return {}
         console.log(req.body.operationName)
         if (whitelisted.includes(req.body.operationName)) return {}
@@ -27,11 +28,22 @@ const apolloServer = new ApolloServer({
         const user = getUser(token.split(' ')[1])
         if (!user) throw new AuthenticationError("You must be logged in!")
         return user
-    }
-})
+}
 
-const listenToApolloServer = () => apolloServer.listen().then(({url}) => {
-    console.log(`Apollo Server is running at ${url}`)
-})
-
-export default listenToApolloServer
+export default async function startApolloServer() {
+    const app = express()
+    const httpServer = http.createServer(app)
+    const apolloServer = new ApolloServer({
+        schema,
+        csrfPrevention: true,
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        context: apolloContext
+    })
+    await apolloServer.start()
+    apolloServer.applyMiddleware({
+        app,
+        path: '/'
+    })
+    await new Promise((resolve) => httpServer.listen( { port: 4000 }, resolve))
+	console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`);
+}
