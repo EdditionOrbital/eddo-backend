@@ -1,7 +1,6 @@
 import { createModule, gql } from "graphql-modules";
-import { createAnnouncement, deleteAnnouncement, readAnnouncements } from "../db_functions/Announcement.js";
+import { createAnnouncement, deleteAnnouncement, readAnnouncements, updateAnnouncement } from "../db_functions/Announcement.js";
 import { readStudent } from "../db_functions/Student.js";
-import { updateTask } from "../db_functions/Task.js";
 
 export const AnnouncementModule = createModule({
   id: "announcement",
@@ -40,7 +39,7 @@ export const AnnouncementModule = createModule({
 	},
 	Mutation: {
 		createAnnouncement: (_, args, context) => createAnnouncement({...args, authorId: context.id}),
-		updateAnnouncement: async (_, args) => updateTask({title: args.title}, args),
+		updateAnnouncement: async (_, args) => updateAnnouncement({title: args.title}, args),
 		deleteAnnouncement: (_, args) => deleteAnnouncement(args)
 	}
   }
