@@ -22,7 +22,7 @@ export const ModuleModule = createModule({
 			}
 
 			type Query {
-				readModules(year: Int!, sem: Int!): [Module!]!
+				readModules(year: Int!, sem: Int!): [Module!]
 				readModule(id: ID!): Module 
 				contextModules: [Module!]!
 			}
@@ -35,15 +35,10 @@ export const ModuleModule = createModule({
 			semester: (parent) => parent.id.split("-")[2],
 			lessons: (parent, args) => readLessons({moduleId: parent.id, ...args}),
 			lesson: (parent, args) => readLesson({moduleId: parent.id, code: args.code}),
-			students: (parent) => {
-				const students = readStudents()
-				return students.filter((student) =>
-					student.modules.map((mt) => mt.moduleId).includes(parent.id)
-				)
-			},
+			students: (parent) => readStudents().then(students => students.filter(s => s.modules.map(m => m.moduleId).includes(parent.id)))
 		},
 		Query: {
-			readModules: (_, args) => readModules({ id: { $regex: new RegExp(`${args.year}-${args.sem}`, 'g'), $options: 'i'}}),
+			readModules: (_, args) => readModules({ id: { $regex: new RegExp(`${args.year}-${args.sem}`, 'g')}}),
 			readModule: (_, args) => readModule(args),
 			contextModules: async (_, __, context) => {
 				const student = await readStudent({id:context.id})

@@ -16,11 +16,11 @@ export const ModuleObject = mongoose.model('Module', ModuleSchema)
 export const readModules = (params) => {
 	return ModuleObject.find(params)
 		.then(unpackMultipleDocuments)
-		.catch(err => "Unable to read modules")
+		.catch((err) => console.log("Error while getting modules"));
 }
 
 export const readModule = (params) => {
-	return ModuleObject.find(params)
+	return ModuleObject.findOne(params)
 		.then(unpackSingleDocument)
-		.catch(err => "Unable to read module")
+		.catch((err) => console.log("Error while getting module"));
 }
