@@ -1,6 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import { readStudent, readStudents } from "../db_functions/Student.js";
-import { readLessons } from "../db_functions/Lesson.js";
+import { readLesson, readLessons } from "../db_functions/Lesson.js";
 
 export const LessonModule = createModule({
 	id: "lesson",
@@ -19,6 +19,8 @@ export const LessonModule = createModule({
 
 		type Query {
 			contextLessons: [Lesson!]!
+			readLessons(moduleId: ID): [Lesson!]!
+			readLesson(moduleId: ID!, code: ID!): Lesson
 		}
 	`,
 	resolvers: {
@@ -35,6 +37,8 @@ export const LessonModule = createModule({
 			},
 		},
 		Query: {
+			readLessons: (_, args) => readLessons(args),
+			readLesson: (_, args) => readLesson(args),
 			contextLessons: async (_, __, context) => {
 				const student = await readStudent({id: context.id})
 				const lst = student.modules.map(x => x.moduleId)
