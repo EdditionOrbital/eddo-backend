@@ -8,6 +8,7 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 
 const whitelisted = ['LoginMutation', 'RegisterMutation']
 const schema = apolloApplication.createSchemaForApollo();
+const PORT = process.env.PORT || 4000
 
 const getUser = (token) => {
     if (token) {
@@ -44,6 +45,6 @@ export default async function startApolloServer() {
         app,
         path: '/'
     })
-    await new Promise((resolve) => httpServer.listen( { port: 4000 }, resolve))
+    await new Promise((resolve) => httpServer.listen( { port: PORT }, resolve))
 	console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`);
 }
