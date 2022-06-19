@@ -41,8 +41,7 @@ for year in [2019, 2020, 2021]:
 				"id": mod_id,
 				"title": mod_data['title'],
 				"description": mod_data['description'],
-				"credits": mod_data['moduleCredit'],
-				"files": { "title": "root" }
+				"credits": mod_data['moduleCredit']
 			})
 			for lesson in sem['timetable']:
 				lessons.append({
@@ -66,10 +65,10 @@ for _ in trange(STUDENTS_N):
 	lastName = fake.last_name()
 	modulesTaken = []
 	codes = []
-	for year in [2019, mYear + 1]:
+	for year in [mYear, 2022]:
 		for sem in [1, 2]:
 			current_sem_mods = list(filter(lambda x: f"{year}-{sem}" in x['id'], modules))
-#			current_sem_mods = list(filter(lambda x: x['id'][:-7] not in codes, current_sem_mods))
+			current_sem_mods = list(filter(lambda x: x['id'][:-7] not in codes, current_sem_mods))
 			taken_mods = random.sample(current_sem_mods, min(random.randint(5, 7), len(current_sem_mods)))
 			for mod in taken_mods:
 				codes.append(mod['id'][:-7])
@@ -98,6 +97,41 @@ for _ in trange(STUDENTS_N):
 	})
 print()
 
+print('Inserting Folders and Files')
+files = []
+for module in tqdm(modules):
+	main_folder = {
+		"title": f"{module['id']}-MAIN",
+		"parentFolder": None,
+		"moduleId": module['id'],
+		"openDate": None,
+		"closeDate": None
+	}
+	ids = [db.folders.insert_one(main_folder).inserted_id]
+	for _ in range(random.randint(4, 12)):
+		folder_id = random.choice(ids)
+		folder = {
+			"title": fake.word().capitalize(),
+			"parentFolder": folder_id,
+			"moduleId": module['id'],
+			"openDate": None,
+			"closeDate": None
+		}
+		ids.append(db.folders.insert_one(folder).inserted_id)
+	for _ in range(random.randint(10, 20)):
+		filename = fake.file_name()
+		file = {
+			"title" : filename,
+			"path" : f"/static/files/{filename}",
+			"size" : round(random.uniform(1, 5), 2),
+			"parentFolder" : random.choice(ids),
+			"moduleId" : module['id'],
+			"openDate" : None,
+			"closeDate" : None
+		}
+		files.append(file)
+
+db.files.insert_many(files)
 db.modules.insert_many(modules)
 db.lessons.insert_many(lessons)
 db.students.insert_many(students)
