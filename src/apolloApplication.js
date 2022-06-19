@@ -10,7 +10,6 @@ import { TaskModule } from "../types/Task.js";
 import { UserModule } from "../types/User.js";
 import { AnnouncementModule } from "../types/Announcement.js";
 import { StaffModule } from "../types/Staff.js";
-import { AdminModule } from "../types/Admin.js";
 import { HTTPResponseModule } from "../types/HTTPResponse.js";
 
 export const apolloApplication = createApplication({
@@ -26,7 +25,6 @@ export const apolloApplication = createApplication({
 		TaskModule,
 		AnnouncementModule,
 		StaffModule,
-		AdminModule,
 		HTTPResponseModule
 	]
 });
