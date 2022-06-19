@@ -8,9 +8,11 @@ export const FileModule = createModule({
 			title: String!
 			path: String!
 			size: Float!
-			parentFolder: ID!
+			parentFolder: ID
+			moduleId: ID!
 			openDate: String
 			closeDate: String
 		}
 	`,
+	
 });

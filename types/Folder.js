@@ -7,6 +7,7 @@ export const FolderModule = createModule({
 			_id: ID!
 			title: String!
 			parentFolder: ID
+			moduleId: ID!
 			openDate: String
 			closeDate: String
 		}
