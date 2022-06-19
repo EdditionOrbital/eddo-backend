@@ -10,6 +10,7 @@ export const AdminModule = createModule({
       lastName: String
       email: String!
       password: String!
+      modules: [ModuleTaken!]!
     }
 
     type Query {

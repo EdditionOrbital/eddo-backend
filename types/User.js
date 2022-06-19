@@ -13,6 +13,7 @@ export const UserModule = createModule({
 			lastName: String
 			email: String!
 			password: String!
+			modules: [ModuleTaken!]!
 		}
 
 		type EddoAppContext {
