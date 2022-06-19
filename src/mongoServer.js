@@ -9,6 +9,6 @@ const connectToMongo = (after) => mongoose.connect(
 	)
 	.then(() => console.log('MongoDB connected successfully'))
 	.then(after)
-	.catch((err) => console.log('Error while connecting to MongoDB'))
+	.catch((err) => console.log(err))
 
 export default connectToMongo
