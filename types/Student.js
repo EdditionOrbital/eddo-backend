@@ -25,7 +25,7 @@ export const StudentModule = createModule({
 	`,
 	resolvers: {
 		Query: {
-			readStudents: readStudents(),
+			readStudents: (_, args) => readStudents(args),
 			readStudent: (_, args) => readStudent(args)
 		},
 		Mutation: {
