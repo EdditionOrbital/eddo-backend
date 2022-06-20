@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
-const MONGO_URL = 'mongodb://0.0.0.0:27017'
+var mongoServerName = process.env.NODE_ENV === 'production' ? 'eddo-mongo-1' : '0.0.0.0'
+var MONGO_URL = `mongodb://${mongoServerName}:27017`
+
 const DB_NAME = 'eddo'
 
 const connectToMongo = (after) => mongoose.connect(
