@@ -1,5 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import { createStudent, readStudent, readStudents } from "../db_functions/Student.js";
+import { readTasks } from "../db_functions/Task.js";
 
 export const StudentModule = createModule({
 	id: "student",
@@ -12,6 +13,7 @@ export const StudentModule = createModule({
 			email: String!
 			password: String!
 			mYear: Int!
+			tasks: [Task!]!
 		}
 
 		type Query {
@@ -24,6 +26,9 @@ export const StudentModule = createModule({
 		}
 	`,
 	resolvers: {
+		Student: {
+			tasks: (parent) => readTasks({studentId: parent.id})
+		},
 		Query: {
 			readStudents: (_, args) => readStudents(args),
 			readStudent: (_, args) => readStudent(args)
