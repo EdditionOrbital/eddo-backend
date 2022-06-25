@@ -3,6 +3,7 @@ import { readFiles } from "../db_functions/File.js";
 import { readFolders } from "../db_functions/Folder.js";
 import { readLesson, readLessons } from "../db_functions/Lesson.js";
 import { readModule, readModules } from "../db_functions/Module.js";
+import { readStaff, readStaffs } from "../db_functions/Staff.js";
 import { readStudent, readStudents } from "../db_functions/Student.js";
 
 export const ModuleModule = createModule({
@@ -46,8 +47,9 @@ export const ModuleModule = createModule({
 			readModules: (_, args) => readModules({ id: { $regex: new RegExp(`${args.year}-${args.sem}`, 'g')}}),
 			readModule: (_, args) => readModule(args),
 			contextModules: async (_, __, context) => {
-				const student = await readStudent({id:context.id})
-				const lst = student.modules.map(x => x.moduleId)
+				var user = await readStudent({id:context.id})
+				if (!user) user = await readStaff({ id: context.id })
+				const lst = user.modules.map(x => x.moduleId)
 				const modules = await readModules()
 				if (!lst.length) return []
 				return modules.filter((module) => lst.includes(module.id))
