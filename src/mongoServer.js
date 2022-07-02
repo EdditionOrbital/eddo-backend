@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 
-var mongoServerName = process.env.NODE_ENV === 'production' ? 'eddo-deployment-mongo-1' : '0.0.0.0'
-var MONGO_URL = `mongodb://${mongoServerName}:27017`
+var MONGO_URL = process.env.MONGODB_URI
 
 const DB_NAME = 'eddo'
 
