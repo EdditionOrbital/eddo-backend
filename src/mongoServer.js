@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 
-var MONGO_URL = process.env.MONGODB_URI
+var MONGO_URL = process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017'
 
 const DB_NAME = 'eddo'
 
