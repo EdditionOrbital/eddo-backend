@@ -12,7 +12,7 @@ export const TaskSchema = mongoose.Schema({
 export const TaskObject = mongoose.model('Task', TaskSchema)
 
 export const createTask = (task) => {
-	const httpResponse = new TaskObject({...task, date: new Date().toTimeString()}).save()
+	const httpResponse = new TaskObject({...task, date: new Date().toISOString()}).save()
 		.then(res => ({ response: res._id}))
 		.catch(err => ({ error: err}))
 	return httpResponse
