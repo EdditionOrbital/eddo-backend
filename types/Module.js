@@ -1,4 +1,5 @@
 import { createModule, gql } from "graphql-modules";
+import { readAssignments } from "../db_functions/Assignment.js";
 import { readFiles } from "../db_functions/File.js";
 import { readFolders } from "../db_functions/Folder.js";
 import { readLesson, readLessons } from "../db_functions/Lesson.js";
@@ -25,6 +26,7 @@ export const ModuleModule = createModule({
 				files: [File!]!
 				folders: [Folder!]!
 				media: [Media!]!
+				assignments: [Assignment!]!
 			}
 
 			type Query {
@@ -44,7 +46,8 @@ export const ModuleModule = createModule({
 			students: (parent) => readStudents().then(students => students.filter(s => s.modules.map(m => m.moduleId).includes(parent.id))),
 			files: (parent) => readFiles({ moduleId: parent.id }),
 			folders: (parent) => readFolders({ moduleId: parent.id }),
-			media: (parent) => readMedias({ moduleId: parent.id })
+			media: (parent) => readMedias({ moduleId: parent.id }),
+			assignments: (parent) => readAssignments({ moduleId: parent.id })
 		},
 		Query: {
 			readModules: (_, args) => readModules({ id: { $regex: new RegExp(`${args.year}-${args.sem}`, 'g')}}),
