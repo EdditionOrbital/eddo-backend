@@ -13,6 +13,7 @@ import { StaffModule } from "../types/Staff.js";
 import { HTTPResponseModule } from "../types/HTTPResponse.js";
 import { MediaModule } from "../types/Media.js";
 import { AssignmentModule } from "../types/Assignment.js";
+import { AssignmentSubmissionModule } from "../types/AssignmentSubmission.js";
 
 export const apolloApplication = createApplication({
 	modules: [
@@ -29,6 +30,7 @@ export const apolloApplication = createApplication({
 		StaffModule,
 		HTTPResponseModule,
 		MediaModule,
-		AssignmentModule
+		AssignmentModule,
+		AssignmentSubmissionModule
 	]
 });

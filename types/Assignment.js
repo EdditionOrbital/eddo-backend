@@ -12,7 +12,7 @@ export const AssignmentModule = createModule({
 			moduleId: String!
 			instructions: String!
 			files: [String!]!
-			maxScore: Float
+			maxScore: Float!
 		}
 		type Query {
 			readAssignment(_id: ID!): Assignment

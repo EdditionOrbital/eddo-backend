@@ -9,7 +9,7 @@ export const AssignmentSchema = mongoose.Schema({
 	moduleId: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
 	instructions: { type: schemaTypes.String, required: [true, "This field cannot be empty."] },
 	files: { type: [schemaTypes.String], required: [true, "This field cannot be empty."], default: [] },
-	maxScore: { type: schemaTypes.Number },
+	maxScore: { type: schemaTypes.Number, required: true, default: -1 },
 
 })
 
