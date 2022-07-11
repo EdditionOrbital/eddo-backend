@@ -5,6 +5,7 @@ import { readFolders } from "../db_functions/Folder.js";
 import { readLesson, readLessons } from "../db_functions/Lesson.js";
 import { readMedias } from "../db_functions/Media.js";
 import { readModule, readModules } from "../db_functions/Module.js";
+import { readQuizzes } from "../db_functions/Quiz.js";
 import { readStaff, readStaffs } from "../db_functions/Staff.js";
 import { readStudent, readStudents } from "../db_functions/Student.js";
 
@@ -27,6 +28,7 @@ export const ModuleModule = createModule({
 				folders: [Folder!]!
 				media: [Media!]!
 				assignments: [Assignment!]!
+				quizzes: [Quiz!]!
 			}
 
 			type Query {
@@ -47,7 +49,8 @@ export const ModuleModule = createModule({
 			files: (parent) => readFiles({ moduleId: parent.id }),
 			folders: (parent) => readFolders({ moduleId: parent.id }),
 			media: (parent) => readMedias({ moduleId: parent.id }),
-			assignments: (parent) => readAssignments({ moduleId: parent.id })
+			assignments: (parent) => readAssignments({ moduleId: parent.id }),
+			quizzes: (parent) => readQuizzes({ moduleId: parent.id })
 		},
 		Query: {
 			readModules: (_, args) => readModules({ id: { $regex: new RegExp(`${args.year}-${args.sem}`, 'g')}}),
