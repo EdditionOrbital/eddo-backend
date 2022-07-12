@@ -12,6 +12,7 @@ export const QuizModule = createModule({
 			close: String!
 			questions: [QuizQuestion!]!
 			displayScore: Boolean!
+			numQuestions: Int!
 		}
 		type QuizQuestion {
 			_id: ID!
@@ -49,6 +50,9 @@ export const QuizModule = createModule({
 		}
 	`,
 	resolvers: {
+		Quiz: {
+			numQuestions: (parent) => parent.questions.length
+		},
 		Query: {
 			readQuiz: (_, args) => readQuiz(args)
 		},

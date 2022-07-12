@@ -15,6 +15,7 @@ import { MediaModule } from "../types/Media.js";
 import { AssignmentModule } from "../types/Assignment.js";
 import { AssignmentSubmissionModule } from "../types/AssignmentSubmission.js";
 import { QuizModule } from "../types/Quiz.js";
+import { QuizSubmissionModule } from "../types/QuizSubmission.js";
 
 export const apolloApplication = createApplication({
 	modules: [
@@ -33,6 +34,7 @@ export const apolloApplication = createApplication({
 		MediaModule,
 		AssignmentModule,
 		AssignmentSubmissionModule,
-		QuizModule
+		QuizModule,
+		QuizSubmissionModule
 	]
 });
