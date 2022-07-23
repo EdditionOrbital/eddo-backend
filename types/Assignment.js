@@ -1,5 +1,6 @@
 import { createModule, gql } from "graphql-modules";
 import { createAssignment, deleteAssignment, readAssignment, updateAssignment } from "../db_functions/Assignment.js";
+import { readAssignmentSubmissions } from "../db_functions/AssignmentSubmission.js";
 
 export const AssignmentModule = createModule({
 	id: "assignment",
@@ -13,6 +14,7 @@ export const AssignmentModule = createModule({
 			instructions: String!
 			files: [String!]!
 			maxScore: Float!
+			submissions: [AssignmentSubmission!]!
 		}
 		type Query {
 			readAssignment(_id: ID!): Assignment
@@ -24,6 +26,9 @@ export const AssignmentModule = createModule({
 		}
 	`,
 	resolvers: {
+		Assignment: {
+			submissions: (parent) => readAssignmentSubmissions({ assignmentId: parent._id })
+		},
 		Query: {
 			readAssignment: (_, args) => readAssignment(args)
 		},
