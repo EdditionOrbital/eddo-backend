@@ -1,4 +1,5 @@
 import { createModule, gql } from "graphql-modules";
+import { readAnnouncements } from "../db_functions/Announcement.js";
 import { readAssignmentSubmission, readAssignmentSubmissions } from "../db_functions/AssignmentSubmission.js";
 import { readQuizSubmissions } from "../db_functions/QuizSubmission.js";
 import { createStudent, readStudent, readStudents } from "../db_functions/Student.js";
@@ -18,6 +19,7 @@ export const StudentModule = createModule({
 			tasks: [Task!]!
 			assignmentSubmissions: [AssignmentSubmission!]!
 			quizSubmissions: [QuizSubmission!]!
+			announcements: [Announcement!]!
 		}
 
 		type Query {
@@ -33,7 +35,8 @@ export const StudentModule = createModule({
 		Student: {
 			tasks: (parent) => readTasks({studentId: parent.id}),
 			assignmentSubmissions: (parent, args) => readAssignmentSubmissions({ studentId: parent.id }),
-			quizSubmissions: (parent) => readQuizSubmissions({ studentId: parent.id })
+			quizSubmissions: (parent) => readQuizSubmissions({ studentId: parent.id }),
+			announcements: (parent) => readAnnouncements({ moduleId: {$in: parent.modules.map(m => m.moduleId)}})
 		},
 		Query: {
 			readStudents: (_, args) => readStudents(args),

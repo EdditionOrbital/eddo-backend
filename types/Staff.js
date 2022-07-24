@@ -1,4 +1,5 @@
 import { createModule, gql } from "graphql-modules";
+import { readAnnouncements } from "../db_functions/Announcement.js";
 import { readStaffs, readStaff, createStaff } from "../db_functions/Staff.js";
 
 export const StaffModule = createModule({  
@@ -12,6 +13,7 @@ export const StaffModule = createModule({
 			email: String!
 			password: String!
 			title: String!
+			announcements: [Announcement!]!
 		}
 
 		type Query {
@@ -24,6 +26,9 @@ export const StaffModule = createModule({
 		}
 	`,
 	resolvers: {
+		Staff: {
+			announcements: (parent) => readAnnouncements({ moduleId: {$in: parent.modules.map(m => m.moduleId)}})
+		},
 		Query: {
 			readStaffs: () => readStaffs(),
 			readStaff: (_, args) => readStaff(args)
