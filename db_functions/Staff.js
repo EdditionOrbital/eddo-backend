@@ -11,7 +11,7 @@ export const StaffSchema = mongoose.Schema({
 		unique: [true, "A staffer with this ID already exists."],
 		validate: {
 			validator: function (id) {
-				/^B\d{7}[A-Z]$/.test(id);
+				return /^B\d{7}[A-Z]$/.test(id);
 			},
 			message: (props) => `Matriculation number is invalid.`,
 		},
@@ -24,12 +24,6 @@ export const StaffSchema = mongoose.Schema({
 	modules: {
 		type: [ModuleTakenSchema],
 		required: [true, "This field cannot be empty."],
-		validate: {
-			validator: function (lastName) {
-				/[A-Za-z ]+/.test(lastName);
-			},
-			message: (props) => `Inavlid last name entered.`,
-		},
 		default: [],
 	},
 	email: {
@@ -38,7 +32,7 @@ export const StaffSchema = mongoose.Schema({
 		unique: [true, "An account with this email already exists."],
 		validate: {
 			validator: function (email) {
-				/.+@u.nus.edu/.test(email);
+				return /.+@u.nus.edu/.test(email);
 			},
 			message: (props) => `Email is invalid.`,
 		},

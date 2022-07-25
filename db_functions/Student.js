@@ -15,7 +15,7 @@ export const StudentSchema = mongoose.Schema({
 		unique: [true, "A student with this ID already exists."],
 		validate: {
 			validator: function (id) {
-				/^B\d{7}[A-Z]$/.test(id);
+				return /^A\d{7}[A-Z]$/.test(id);
 			},
 			message: (props) => `Matriculation number is invalid.`,
 		},
@@ -29,7 +29,7 @@ export const StudentSchema = mongoose.Schema({
 		required: false,
 		validate: {
 			validator: function (lastName) {
-				/[A-Za-z ]+/.test(lastName);
+				return /[A-Za-z ]+/.test(lastName);
 			},
 			message: (props) => `Inavlid last name entered.`,
 		},
@@ -46,7 +46,7 @@ export const StudentSchema = mongoose.Schema({
 		unique: [true, "An account with this email already exists."],
 		validate: {
 			validator: function (email) {
-				/.+@u.nus.edu/.test(email);
+				return /.+@u.nus.edu/.test(email);
 			},
 			message: (props) => `Email is invalid.`,
 		},

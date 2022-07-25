@@ -24,6 +24,7 @@ export const ModuleModule = createModule({
 				lessons(lessonType: String): [Lesson] # resolver field
 				lesson(code: String!): Lesson # resolver field
 				students: [Student] # resolver field
+				staffs: [Staff!]!
 				files: [File!]!
 				folders: [Folder!]!
 				media: [Media!]!
@@ -50,7 +51,8 @@ export const ModuleModule = createModule({
 			folders: (parent) => readFolders({ moduleId: parent.id }),
 			media: (parent) => readMedias({ moduleId: parent.id }),
 			assignments: (parent) => readAssignments({ moduleId: parent.id }),
-			quizzes: (parent) => readQuizzes({ moduleId: parent.id })
+			quizzes: (parent) => readQuizzes({ moduleId: parent.id }),
+			staffs: (parent) => readStaffs({ "modules.moduleId": parent.id })
 		},
 		Query: {
 			readModules: (_, args) => readModules({ id: { $regex: new RegExp(`${args.year}-${args.sem}`, 'g')}}),
